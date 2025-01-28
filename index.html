@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contratação de Funcionários - Prefeitura de Quixadá</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Contratação de Funcionários - Prefeitura de Quixadá</h1>
+    </header>
+    <main>
+      <section id="filtros">
+        <h2>Filtros</h2>
+        <form id="filtro-form">
+          <label for="cargo">Cargo:</label>
+          <input
+            type="text"
+            id="cargo"
+            name="cargo"
+            placeholder="Digite o cargo"
+          />
+
+          <label for="setor">Setor:</label>
+          <input
+            type="text"
+            id="setor"
+            name="setor"
+            placeholder="Digite o setor"
+          />
+
+          <button type="button" id="aplicar-filtro">Aplicar Filtro</button>
+          <button type="button" id="calcular-estatisticas">
+            Calcular Estatísticas
+          </button>
+        </form>
+      </section>
+
+      <section id="resultados">
+        <h2>Resultados</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Cargo</th>
+              <th>Setor</th>
+              <th>Salário</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-dados">
+            <!-- Dados serão inseridos aqui dinamicamente -->
+          </tbody>
+        </table>
+      </section>
+
+      <section id="estatisticas" class="stats">
+        <h2>Estatísticas</h2>
+        <p id="media-salarial">Média Salarial: -</p>
+        <p id="salario-maximo">Salário Máximo: -</p>
+        <p id="salario-minimo">Salário Mínimo: -</p>
+      </section>
+    </main>
+    <script src="index.js"></script>
+  </body>
+</html>
