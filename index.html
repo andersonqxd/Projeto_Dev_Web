@@ -13,58 +13,50 @@
 
     <main>
         <section>
-            <h2>Filtros de Campos</h2>
-            <div class="checkbox-container">
-                <label>
-                    <input type="checkbox" class="filter" value="Nome do funcionário" checked>
-                    Nome
-                </label>
-                <label>
-                    <input type="checkbox" class="filter" value="Competência" checked>
-                    Competência
-                </label>
-                <label>
-                    <input type="checkbox" class="filter" value="Cargo" checked>
-                    Cargo
-                </label>
-                <label>
-                    <input type="checkbox" class="filter" value="Setor" checked>
-                    Setor
-                </label>
-                <label>
-                    <input type="checkbox" class="filter" value="Líquido" checked>
-                    Líquido
-                </label>
+            <h2>Filtros</h2>
+            <div class="filter-container">
+                <label for="departamento-select">Departamento:</label>
+                <select id="departamento-select">
+                    <option value="">Todos</option>
+                </select>
             </div>
-            <h2>Filtros Avançados</h2>
-            <label for="cargo-select">Filtrar por Cargo:</label>
-            <select id="cargo-select">
-                <option value="">Todos</option>
-            </select>
+        </section>
 
-            <label for="setor-select">Filtrar por Setor:</label>
-            <select id="setor-select">
-                <option value="">Todos</option>
-            </select>
+        <section>
+            <h2>Escolha os Campos a Exibir</h2>
+            <div class="checkbox-container">
+                <label><input type="checkbox" class="filter" value="Nome do funcionário" checked> Nome</label>
+                <label><input type="checkbox" class="filter" value="Competência" checked> Competência</label>
+                <label><input type="checkbox" class="filter" value="Folha" checked> Folha</label>
+                <label><input type="checkbox" class="filter" value="Vínculo" checked> Vínculo</label>
+                <label><input type="checkbox" class="filter" value="Cargo" checked> Cargo</label>
+                <label><input type="checkbox" class="filter" value="Setor" checked> Setor</label>
+                <label><input type="checkbox" class="filter" value="Departamento" checked> Departamento</label>
+                <label><input type="checkbox" class="filter" value="Matrícula" checked> Matrícula</label>
+                <label><input type="checkbox" class="filter" value="Proventos" checked> Proventos</label>
+                <label><input type="checkbox" class="filter" value="Descontos" checked> Descontos</label>
+                <label><input type="checkbox" class="filter" value="Líquido" checked> Líquido</label>
+            </div>
         </section>
 
         <section>
             <h2>Lista de Funcionários</h2>
             <table>
                 <thead>
-                    <tr id="tabela-header">
-                        <!-- Cabeçalho da tabela será preenchido dinamicamente -->
-                    </tr>
+                    <tr id="tabela-header"></tr>
                 </thead>
-                <tbody id="tabela-dados">
-                    <!-- Dados do funcionário serão carregados aqui -->
-                </tbody>
+                <tbody id="tabela-dados"></tbody>
             </table>
+        </section>
+
+        <section>
+            <h2>Estatísticas do Departamento</h2>
+            <p><strong>Total do departamento:</strong> <span id="total-departamento">-</span></p>
+            <p><strong>Número de funcionários:</strong> <span id="num-funcionarios">-</span></p>
+            <p><strong>Média salarial:</strong> <span id="media-salarial">-</span></p>
         </section>
     </main>
 
-    <script>
-       
-    </script>
+    <script src="index.js"></script>
 </body>
 </html>
