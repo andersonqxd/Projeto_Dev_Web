@@ -4,10 +4,9 @@ const funcionarios = [
     Competência: "AGOSTO/2023",
     Folha: "FOLHA NORMAL",
     Vínculo: "02 - ESTATUTARIO",
-    Cargo: "Professor",
-    Setor: "Educação",
-    Departamento: "Ensino Fundamental",
-    Matrícula: "562.793,00",
+    Cargo: "840 - PROFESSOR(A) EDUCACAO BASICA",
+    Setor: "REG EDUCAC CENTRO - FUND. 70%",
+    Matricula: "562.793,00",
     Proventos: 4393.25,
     Descontos: 863.58,
     Líquido: 3529.67,
@@ -17,13 +16,24 @@ const funcionarios = [
     Competência: "AGOSTO/2023",
     Folha: "FOLHA NORMAL",
     Vínculo: "02 - ESTATUTARIO",
-    Cargo: "Auxiliar de Serviços Gerais",
-    Setor: "Educação",
-    Departamento: "Infraestrutura Escolar",
-    Matrícula: "550.809,00",
+    Cargo: "9 - AUX. DE SERVICOS",
+    Setor: "REG EDUCAC CIPO DOS ANJOS - FUND. 70%",
+    Matricula: "550.809,00",
     Proventos: 1518.0,
     Descontos: 238.92,
     Líquido: 1279.08,
+  },
+  {
+    "Nome do funcionário": "ADAILTON LIMA DE ALMEIDA",
+    Competência: "AGOSTO/2023",
+    Folha: "FOLHA NORMAL",
+    Vínculo: "02 - ESTATUTARIO",
+    Cargo: "271 - GUARDA PATRIMONIAL MUNICIPAL",
+    Setor: "CRAS- RECURSOS FEDERAIS",
+    Matricula: "918.628,00",
+    Proventos: 2105.82,
+    Descontos: 240.24,
+    Líquido: 1865.58,
   },
   {
     "Nome do funcionário": "ADEANDRO DA ROCHA LIMA",
@@ -48,81 +58,92 @@ const funcionarios = [
     Proventos: 4061.77,
     Descontos: 633.64,
     Líquido: 3428.13,
-  }
+  },
 ];
+
+
 
 const tabelaHeader = document.getElementById("tabela-header");
 const tabelaDados = document.getElementById("tabela-dados");
 const checkboxes = document.querySelectorAll(".filter");
-const departamentoSelect = document.getElementById("departamento-select");
-const totalDepartamento = document.getElementById("total-departamento");
+const cargoSelect = document.getElementById("cargo-select");
+const setorSelect = document.getElementById("setor-select");
+const totalSetor = document.getElementById("total-setor");
 const numFuncionarios = document.getElementById("num-funcionarios");
 const mediaSalarial = document.getElementById("media-salarial");
 
-function atualizarCabecalho() {
-    tabelaHeader.innerHTML = "";
-    checkboxes.forEach((checkbox) => {
-        if (checkbox.checked) {
-            const th = document.createElement("th");
-            th.textContent = checkbox.value;
-            tabelaHeader.appendChild(th);
-        }
-    });
+// criação dos filtros para a estatitisticas
+// neles selecionamos o setor e o cargo para fazer a filtragem dos dados
+// e mostrar nas estatisticas
+
+function preencherFiltros() { 
+  const cargos = new Set(); //
+  const setores = new Set();
+
+  funcionarios.forEach((func) => {
+    cargos.add(func.Cargo);
+    setores.add(func.Setor);
+  });
+
+  cargos.forEach((cargo) => {
+    const option = document.createElement("option");
+    option.value = cargo;
+    option.textContent = cargo;
+    cargoSelect.appendChild(option);
+  });
+
+  setores.forEach((setor) => {
+    const option = document.createElement("option");
+    option.value = setor;
+    option.textContent = setor;
+    setorSelect.appendChild(option);
+  });
 }
 
-function preencherDepartamentos() {
-    const departamentos = new Set();
-    funcionarios.forEach((func) => departamentos.add(func.Departamento));
 
-    departamentos.forEach((departamento) => {
-        const option = document.createElement("option");
-        option.value = departamento;
-        option.textContent = departamento;
-        departamentoSelect.appendChild(option);
-    });
-}
+
+// 
 
 function exibirFuncionarios() {
-    tabelaDados.innerHTML = "";
-    const departamentoFiltro = departamentoSelect.value;
+  tabelaDados.innerHTML = "";
+  const cargoFiltro = cargoSelect.value;
+  const setorFiltro = setorSelect.value;
 
-    const filtrados = funcionarios.filter((func) => {
-        return !departamentoFiltro || func.Departamento === departamentoFiltro;
+  const filtrados = funcionarios.filter((func) => {
+    return (
+      (!cargoFiltro || func.Cargo === cargoFiltro) &&
+      (!setorFiltro || func.Setor === setorFiltro)
+    );
+  });
+
+  filtrados.forEach((func) => {
+    const tr = document.createElement("tr");
+    checkboxes.forEach((checkbox) => {
+      if (checkbox.checked) {
+        const td = document.createElement("td");
+        td.textContent = func[checkbox.value] || "-";
+        tr.appendChild(td);
+      }
     });
+    tabelaDados.appendChild(tr);
+  });
 
-    filtrados.forEach((func) => {
-        const tr = document.createElement("tr");
-        checkboxes.forEach((checkbox) => {
-            if (checkbox.checked) {
-                const td = document.createElement("td");
-                td.textContent = func[checkbox.value] || "-";
-                tr.appendChild(td);
-            }
-        });
-        tabelaDados.appendChild(tr);
-    });
-
-    calcularEstatisticas(filtrados);
+  calcularEstatisticas(filtrados);
 }
+
+
 
 function calcularEstatisticas(filtrados) {
-    const total = filtrados.reduce((acc, func) => acc + func.Líquido, 0);
-    const quantidade = filtrados.length;
-    const media = quantidade > 0 ? total / quantidade : 0;
+  const total = filtrados.reduce((acc, func) => acc + func.Líquido, 0);
+  const quantidade = filtrados.length;
+  const media = quantidade > 0 ? total / quantidade : 0;
 
-    totalDepartamento.textContent = `R$ ${total.toFixed(2)}`;
-    numFuncionarios.textContent = quantidade;
-    mediaSalarial.textContent = `R$ ${media.toFixed(2)}`;
+  totalSetor.textContent = `R$ ${total.toFixed(2)}`;
+  numFuncionarios.textContent = quantidade;
+  mediaSalarial.textContent = `R$ ${media.toFixed(2)}`;
 }
 
-    departamentoSelect.addEventListener("change", exibirFuncionarios);
-    checkboxes.forEach((checkbox) =>
-    checkbox.addEventListener("change", () => {
-        atualizarCabecalho();
-        exibirFuncionarios();
-    })
-);
-
-preencherDepartamentos();
-atualizarCabecalho();
+cargoSelect.addEventListener("change", exibirFuncionarios);
+setorSelect.addEventListener("change", exibirFuncionarios);
+preencherFiltros();
 exibirFuncionarios();

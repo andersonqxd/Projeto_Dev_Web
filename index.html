@@ -14,12 +14,15 @@
     <main>
         <section>
             <h2>Filtros</h2>
-            <div class="filter-container">
-                <label for="departamento-select">Departamento:</label>
-                <select id="departamento-select">
-                    <option value="">Todos</option>
-                </select>
-            </div>
+            <label for="cargo-select">Cargo:</label>
+            <select id="cargo-select">
+                <option value="">Todos</option>
+            </select>
+
+            <label for="setor-select">Setor:</label>
+            <select id="setor-select">
+                <option value="">Todos</option>
+            </select>
         </section>
 
         <section>
@@ -31,7 +34,6 @@
                 <label><input type="checkbox" class="filter" value="Vínculo" checked> Vínculo</label>
                 <label><input type="checkbox" class="filter" value="Cargo" checked> Cargo</label>
                 <label><input type="checkbox" class="filter" value="Setor" checked> Setor</label>
-                <label><input type="checkbox" class="filter" value="Departamento" checked> Departamento</label>
                 <label><input type="checkbox" class="filter" value="Matrícula" checked> Matrícula</label>
                 <label><input type="checkbox" class="filter" value="Proventos" checked> Proventos</label>
                 <label><input type="checkbox" class="filter" value="Descontos" checked> Descontos</label>
@@ -50,8 +52,8 @@
         </section>
 
         <section>
-            <h2>Estatísticas do Departamento</h2>
-            <p><strong>Total do departamento:</strong> <span id="total-departamento">-</span></p>
+            <h2>Estatísticas</h2>
+            <p><strong>Total do setor/cargo:</strong> <span id="total-setor">-</span></p>
             <p><strong>Número de funcionários:</strong> <span id="num-funcionarios">-</span></p>
             <p><strong>Média salarial:</strong> <span id="media-salarial">-</span></p>
         </section>
