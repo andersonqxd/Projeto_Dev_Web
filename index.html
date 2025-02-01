@@ -15,14 +15,17 @@
         <section>
             <h2>Filtros</h2>
             <label for="cargo-select">Cargo:</label>
-            <select id="cargo-select">
+            <select id="cargo-select" aria-label="Selecione um cargo">
                 <option value="">Todos</option>
             </select>
 
             <label for="setor-select">Setor:</label>
-            <select id="setor-select">
+            <select id="setor-select" aria-label="Selecione um setor">
                 <option value="">Todos</option>
             </select>
+
+            <button id="aplicar-filtros">Aplicar Filtros</button>
+
         </section>
 
         <section>
@@ -34,7 +37,7 @@
                 <label><input type="checkbox" class="filter" value="Vínculo" checked> Vínculo</label>
                 <label><input type="checkbox" class="filter" value="Cargo" checked> Cargo</label>
                 <label><input type="checkbox" class="filter" value="Setor" checked> Setor</label>
-                <label><input type="checkbox" class="filter" value="Matrícula" checked> Matrícula</label>
+                <label><input type="checkbox" class="filter" value="Matricula" checked> Matricula</label>
                 <label><input type="checkbox" class="filter" value="Proventos" checked> Proventos</label>
                 <label><input type="checkbox" class="filter" value="Descontos" checked> Descontos</label>
                 <label><input type="checkbox" class="filter" value="Líquido" checked> Líquido</label>
