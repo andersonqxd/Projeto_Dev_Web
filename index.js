@@ -1,8 +1,7 @@
 // Caminho do arquivo JSON
-const JSON_URL = "detalhamentopessoal.json"; // Ajuste conforme necessário
+const JSON_URL = "detalhamentopessoal.json"; 
 
-let funcionarios = []; // Array que armazenará os dados
-
+let funcionarios = []; 
 // A função abaixo carrega os dados do json
 async function carregarDados() {
     try {
@@ -24,7 +23,7 @@ async function carregarDados() {
     }
 }
 
-// Aqui a função para preencher os selects de filtro dinamicamente
+// Aqui a função para preencher os selects de filtro
 function popularFiltros() {
     const cargoSelect = document.getElementById("cargo-select");
     const setorSelect = document.getElementById("setor-select");
@@ -71,8 +70,8 @@ function atualizarTabela(dados) {
     const tabelaHeader = document.getElementById("tabela-header");
     const tabelaBody = document.getElementById("tabela-dados");
     
-    tabelaHeader.innerHTML = "";
-    tabelaBody.innerHTML = "";
+    tabelaHeader.textContent = "";
+    tabelaBody.textContent = "";
 
     // Obter colunas selecionadas pelos checkboxes
     const colunasSelecionadas = Array.from(document.querySelectorAll(".filter:checked"))
