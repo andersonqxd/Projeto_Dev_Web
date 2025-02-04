@@ -70,8 +70,8 @@ function atualizarTabela(dados) {
     const tabelaHeader = document.getElementById("tabela-header");
     const tabelaBody = document.getElementById("tabela-dados");
     
-    tabelaHeader.textContent = "";
-    tabelaBody.textContent = "";
+    tabelaHeader.innerHTML = "";
+    tabelaBody.innerHTML = "";
 
     // Obter colunas selecionadas pelos checkboxes
     const colunasSelecionadas = Array.from(document.querySelectorAll(".filter:checked"))
@@ -98,6 +98,7 @@ function atualizarTabela(dados) {
         });
 
         tabelaBody.appendChild(row);
+        
     });
 }
 
@@ -119,6 +120,8 @@ document.getElementById("aplicar-filtros").addEventListener("click", filtrarDado
 document.querySelectorAll(".filter").forEach(checkbox => {
     checkbox.addEventListener("change", () => filtrarDados());
 });
+
+
 
 // Chamada inicial para carregar os dados ao abrir a página
 carregarDados();
