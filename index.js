@@ -1,19 +1,11 @@
-// Caminho do arquivo JSON
-const JSON_URL = "detalhamentopessoal.json"; 
+
 
 let funcionarios = []; 
 // A função abaixo carrega os dados do json
 async function carregarDados() {
     try {
-        const resposta = await fetch(JSON_URL);
-        if (!resposta.ok) {
-            throw new Error(`Erro HTTP! Status: ${resposta.status}`);
-        }
+        const resposta = await fetch("detalhamentopessoal.json");
         const dados = await resposta.json();
-        
-        if (!dados.data || !Array.isArray(dados.data)) {
-            throw new Error("Erro: Estrutura do JSON inesperada!");
-        }
 
         funcionarios = dados.data; // Agora acessamos corretamente a lista de funcionários
         popularFiltros(); 
@@ -27,6 +19,7 @@ async function carregarDados() {
 function popularFiltros() {
     const cargoSelect = document.getElementById("cargo-select");
     const setorSelect = document.getElementById("setor-select");
+
 
     const cargos = new Set();
     const setores = new Set();
@@ -70,8 +63,8 @@ function atualizarTabela(dados) {
     const tabelaHeader = document.getElementById("tabela-header");
     const tabelaBody = document.getElementById("tabela-dados");
     
-    tabelaHeader.textContent = "";
-    tabelaBody.textContent = "";
+    tabelaHeader.innerHTML = "";
+    tabelaBody.innerHTML = "";
 
     // Obter colunas selecionadas pelos checkboxes
     const colunasSelecionadas = Array.from(document.querySelectorAll(".filter:checked"))
@@ -98,6 +91,7 @@ function atualizarTabela(dados) {
         });
 
         tabelaBody.appendChild(row);
+        
     });
 }
 
@@ -107,11 +101,58 @@ function calcularEstatisticas(dados) {
   const totalSalariosLiquidos = dados.reduce((acc, func) => acc + (func["Líquido"] || 0), 0);
   const mediaSalarial = totalSetor > 0 ? totalSalariosLiquidos / totalSetor : 0;
 
-  document.getElementById("total-setor").textContent = totalSetor;
-  document.getElementById("num-funcionarios").textContent = totalSetor;
-  document.getElementById("media-salarial").textContent = mediaSalarial.toLocaleString("pt-BR", {
-      style: "currency", currency: "BRL"
-  });
+// Novo: Total de proventos e descontos
+  const totalProventos = dados.reduce((acc, func) => acc + (func["Proventos"] || 0), 0);
+  const totalDescontos = dados.reduce((acc, func) => acc + (func["Descontos"] || 0), 0);
+
+// Novo: Média de proventos e descontos
+const mediaProventos = totalSetor > 0 ? totalProventos / totalSetor : 0;
+const mediaDescontos = totalSetor > 0 ? totalDescontos / totalSetor : 0;
+
+// Novo: Maior e menor salário líquido
+const maiorSalario = Math.max(...dados.map(func => func["Líquido"] || 0));
+const menorSalario = Math.min(...dados.map(func => func["Líquido"] || 0));
+
+// Novo: Funcionário com maior desconto
+const funcionarioMaiorDesconto = dados.reduce((maior, func) => (func["Descontos"] > (maior?.["Descontos"] || 0) ? func : maior), null);
+
+// Novo: Média percentual de descontos sobre proventos
+const percentualDescontoMedio = totalProventos > 0 ? (totalDescontos / totalProventos) * 100 : 0;
+
+
+// Atualizando o HTML
+document.getElementById("total-setor").textContent = totalSetor;
+document.getElementById("num-funcionarios").textContent = totalSetor;
+document.getElementById("media-salarial").textContent = mediaSalarial.toLocaleString("pt-BR", {
+    style: "currency", currency: "BRL"
+});
+
+// Adicionando novas estatísticas ao HTML
+    document.getElementById("total-proventos").textContent = totalProventos.toLocaleString("pt-BR", {
+        style: "currency", currency: "BRL"
+    });
+    document.getElementById("total-descontos").textContent = totalDescontos.toLocaleString("pt-BR", {
+        style: "currency", currency: "BRL"
+    });
+    document.getElementById("media-proventos").textContent = mediaProventos.toLocaleString("pt-BR", {
+        style: "currency", currency: "BRL"
+    });
+    document.getElementById("media-descontos").textContent = mediaDescontos.toLocaleString("pt-BR", {
+        style: "currency", currency: "BRL"
+    });
+    document.getElementById("maior-salario").textContent = maiorSalario.toLocaleString("pt-BR", {
+        style: "currency", currency: "BRL"
+    });
+    document.getElementById("menor-salario").textContent = menorSalario.toLocaleString("pt-BR", {
+        style: "currency", currency: "BRL"
+    });
+    document.getElementById("percentual-desconto").textContent = percentualDescontoMedio.toFixed(2) + "%";
+
+    if (funcionarioMaiorDesconto) {
+        document.getElementById("funcionario-maior-desconto").textContent = `${funcionarioMaiorDesconto["Nome do funcionário"]} - ${funcionarioMaiorDesconto["Descontos"].toLocaleString("pt-BR", {
+            style: "currency", currency: "BRL"
+        })}`;
+}
 }
 
 // Adicionar os eventos no HTML
@@ -119,6 +160,8 @@ document.getElementById("aplicar-filtros").addEventListener("click", filtrarDado
 document.querySelectorAll(".filter").forEach(checkbox => {
     checkbox.addEventListener("change", () => filtrarDados());
 });
+
+
 
 // Chamada inicial para carregar os dados ao abrir a página
 carregarDados();
