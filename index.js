@@ -98,21 +98,22 @@ function atualizarTabela(dados) {
 // Função para converter valores numéricos corretamente
 function converterParaNumero(valor) {
     if (typeof valor === "string") {
-        // Remover espaços extras
         valor = valor.trim();
 
-        // Verifica se o número já está no formato correto (sem separador de milhar)
-        if (/^\d+(\.\d{2})?$/.test(valor)) {
+        // Se o número já estiver no formato correto (sem separador de milhar), converte direto
+        if (/^\d+(\.\d+)?$/.test(valor)) {
             return parseFloat(valor);
         }
 
-        // Corrigir separadores: remover pontos (milhar) e trocar vírgula (decimal) por ponto
-        valor = valor.replace(/\./g, "").replace(",", ".");
+        // Substitui apenas o último ponto por vírgula para preservar decimais corretos
+        let partes = valor.split(",");
+        let numeroCorrigido = partes[0].replace(/\./g, "") + (partes[1] ? "." + partes[1] : "");
 
-        return parseFloat(valor) || 0;
+        return parseFloat(numeroCorrigido) || 0;
     }
     return valor || 0;
 }
+
 
 
 // Função para calcular estatísticas
