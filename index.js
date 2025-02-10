@@ -4,7 +4,7 @@ let funcionarios = [];
 // A função abaixo carrega os dados do json
 async function carregarDados() {
     try {
-        const resposta = await fetch("detalhamentopessoal.json");
+        const resposta = await fetch("output.json");
         const dados = await resposta.json();
 
         funcionarios = dados.data; // Agora acessamos corretamente a lista de funcionários
@@ -95,39 +95,64 @@ function atualizarTabela(dados) {
     });
 }
 
-// Calculo das estatísticas
+// Função para converter valores numéricos corretamente
+function converterParaNumero(valor) {
+    if (typeof valor === "string") {
+        // Remover espaços extras
+        valor = valor.trim();
+
+        // Verifica se o número já está no formato correto (sem separador de milhar)
+        if (/^\d+(\.\d{2})?$/.test(valor)) {
+            return parseFloat(valor);
+        }
+
+        // Corrigir separadores: remover pontos (milhar) e trocar vírgula (decimal) por ponto
+        valor = valor.replace(/\./g, "").replace(",", ".");
+
+        return parseFloat(valor) || 0;
+    }
+    return valor || 0;
+}
+
+
+// Função para calcular estatísticas
 function calcularEstatisticas(dados) {
-  const totalSetor = dados.length;
-  const totalSalariosLiquidos = dados.reduce((acc, func) => acc + (func["Líquido"] || 0), 0);
-  const mediaSalarial = totalSetor > 0 ? totalSalariosLiquidos / totalSetor : 0;
+    if (!dados || dados.length === 0) {
+        console.warn("Nenhum dado disponível para cálculo.");
+        return;
+    }
 
-// Novo: Total de proventos e descontos
-  const totalProventos = dados.reduce((acc, func) => acc + (func["Proventos"] || 0), 0);
-  const totalDescontos = dados.reduce((acc, func) => acc + (func["Descontos"] || 0), 0);
+    const totalSetor = dados.length;
 
-// Novo: Média de proventos e descontos
-const mediaProventos = totalSetor > 0 ? totalProventos / totalSetor : 0;
-const mediaDescontos = totalSetor > 0 ? totalDescontos / totalSetor : 0;
+    // Convertemos os valores corretamente antes da soma
+    const totalSalariosLiquidos = dados.reduce((acc, func) => acc + converterParaNumero(func["Líquido"]), 0);
+    const totalProventos = dados.reduce((acc, func) => acc + converterParaNumero(func["Proventos"]), 0);
+    const totalDescontos = dados.reduce((acc, func) => acc + converterParaNumero(func["Descontos"]), 0);
 
-// Novo: Maior e menor salário líquido
-const maiorSalario = Math.max(...dados.map(func => func["Líquido"] || 0));
-const menorSalario = Math.min(...dados.map(func => func["Líquido"] || 0));
+    // Cálculo correto das médias
+    const mediaSalarial = totalSetor > 0 ? totalSalariosLiquidos / totalSetor : 0;
+    const mediaProventos = totalSetor > 0 ? totalProventos / totalSetor : 0;
+    const mediaDescontos = totalSetor > 0 ? totalDescontos / totalSetor : 0;
 
-// Novo: Funcionário com maior desconto
-const funcionarioMaiorDesconto = dados.reduce((maior, func) => (func["Descontos"] > (maior?.["Descontos"] || 0) ? func : maior), null);
+    // Encontrando maior e menor salário líquido corretamente
+    const salariosLiquidos = dados.map(func => converterParaNumero(func["Líquido"]));
+    const maiorSalario = Math.max(...salariosLiquidos);
+    const menorSalario = Math.min(...salariosLiquidos);
 
-// Novo: Média percentual de descontos sobre proventos
-const percentualDescontoMedio = totalProventos > 0 ? (totalDescontos / totalProventos) * 100 : 0;
+    // Encontrando o funcionário com maior desconto corretamente
+    const funcionarioMaiorDesconto = dados.reduce((maior, func) => 
+        (converterParaNumero(func["Descontos"]) > converterParaNumero(maior?.["Descontos"] || 0) ? func : maior), null);
 
+    // Cálculo correto da média percentual de descontos sobre proventos
+    const percentualDescontoMedio = totalProventos > 0 ? (totalDescontos / totalProventos) * 100 : 0;
 
-// Atualizando o HTML
-document.getElementById("total-setor").textContent = totalSetor;
-document.getElementById("num-funcionarios").textContent = totalSetor;
-document.getElementById("media-salarial").textContent = mediaSalarial.toLocaleString("pt-BR", {
-    style: "currency", currency: "BRL"
-});
+    // Atualizando o HTML com os valores corrigidos
+    document.getElementById("total-setor").textContent = totalSetor;
+    document.getElementById("num-funcionarios").textContent = totalSetor;
+    document.getElementById("media-salarial").textContent = mediaSalarial.toLocaleString("pt-BR", {
+        style: "currency", currency: "BRL"
+    });
 
-// Adicionando novas estatísticas ao HTML
     document.getElementById("total-proventos").textContent = totalProventos.toLocaleString("pt-BR", {
         style: "currency", currency: "BRL"
     });
@@ -149,11 +174,13 @@ document.getElementById("media-salarial").textContent = mediaSalarial.toLocaleSt
     document.getElementById("percentual-desconto").textContent = percentualDescontoMedio.toFixed(2) + "%";
 
     if (funcionarioMaiorDesconto) {
-        document.getElementById("funcionario-maior-desconto").textContent = `${funcionarioMaiorDesconto["Nome do funcionário"]} - ${funcionarioMaiorDesconto["Descontos"].toLocaleString("pt-BR", {
+        document.getElementById("funcionario-maior-desconto").textContent = `${funcionarioMaiorDesconto["Nome do funcionário"]} - ${converterParaNumero(funcionarioMaiorDesconto["Descontos"]).toLocaleString("pt-BR", {
             style: "currency", currency: "BRL"
         })}`;
+    }
 }
-}
+
+
 
 // Adicionar os eventos no HTML
 document.getElementById("aplicar-filtros").addEventListener("click", filtrarDados);
